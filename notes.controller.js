@@ -43,9 +43,22 @@ async function removeNote(id) {
     }
     notes.splice(noteIndex, 1)
     await fs.writeFile(notesPath, JSON.stringify(notes))
-    console.log(chalk.bgYellow('Note removed'))
+    console.log(chalk.bgRed('Note removed'))
+}
+
+async function editNote(id, title) {
+    const notes = await getNotes()
+    const noteForEditing = notes.filter(note => note.id === id)
+    const noteIndex = notes.indexOf(noteForEditing[0])
+    if (noteForEditing < 0) {
+        console.log(chalk.red('Sorry, note index not found'))
+        return
+    }
+    notes[noteIndex].title = title
+    await fs.writeFile(notesPath, JSON.stringify(notes))
+    console.log(chalk.bgYellow('Note edited'))
 }
 
 module.exports = {
-    addNote, printNotes, removeNote
+    addNote, getNotes, removeNote, editNote
 }
